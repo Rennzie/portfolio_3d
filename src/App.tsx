@@ -1,7 +1,6 @@
 /* eslint-disable */
 import type { Mesh } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import type { OrbitControls as OCType } from 'three/examples/jsm/controls/OrbitControls';
 import React, { useRef, useState } from 'react';
 import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
 
@@ -35,7 +34,6 @@ function Box(props: JSX.IntrinsicElements['mesh']) {
 extend({ OrbitControls });
 
 const CameraControls = () => {
-  const orbitControls = useRef<OCType>();
   // Get a reference to the Three.js Camera, and the canvas html element.
   // We need these to setup the OrbitControls component.
   // https://threejs.org/docs/#examples/en/controls/OrbitControls
@@ -45,12 +43,14 @@ const CameraControls = () => {
   } = useThree();
   // Ref to the controls, so that we can update them on every frame using useFrame
   const controls = useRef();
+  // @ts-ignore
   useFrame((state) => controls.current.update());
 
   return (
+    // @ts-ignore
     <orbitControls
       enableDamping
-      maxPolarAngle={Math.PI * 0.5}
+      maxPolarAngle={Math.PI / 2}
       ref={controls}
       args={[camera, domElement]}
     />
