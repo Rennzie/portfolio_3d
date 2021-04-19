@@ -4,33 +4,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import React, { useRef, useState } from 'react';
 import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
 
-function Box(props: JSX.IntrinsicElements['mesh']) {
-  // This reference will give us direct access to the mesh
-  const mesh = useRef<Mesh>(null!);
-  // Set up state for the hovered and active state
-  const [hovered, setHover] = useState(false);
-  const [active, setActive] = useState(false);
-  // Rotate mesh every frame, this is outside of React without overhead
-  useFrame((state, delta) => {
-    // console.log(delta);
-    mesh.current.rotation.x += 0.01;
-  });
-
-  return (
-    <mesh
-      {...props}
-      ref={mesh}
-      scale={active ? 1.5 : 1}
-      onClick={(event) => setActive(!active)}
-      onPointerOver={(event) => setHover(true)}
-      onPointerOut={(event) => setHover(false)}
-    >
-      <circleGeometry args={[2, 10]} />
-      <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
-    </mesh>
-  );
-}
-
 extend({ OrbitControls });
 
 const CameraControls = () => {
@@ -57,6 +30,37 @@ const CameraControls = () => {
   );
 };
 
+const Rondavel = (props: JSX.IntrinsicElements['group']) => {
+  return (
+    <group {...props} position={[2, 0.5, 0]}>
+      <mesh>
+        <cylinderGeometry args={[1, 1, 1, 100]} />
+        <meshStandardMaterial color={0x786d5f} />
+      </mesh>
+    </group>
+  );
+};
+
+const Sphere = () => {
+  // This reference will give us direct access to the mesh
+  const mesh = useRef<Mesh>(null!);
+  // Set up state for the hovered and active state
+  const [hovered, setHover] = useState(false);
+  const [active, setActive] = useState(false);
+
+  // Rotate mesh every frame, this is outside of React without overhead
+  useFrame((state, delta) => {
+    mesh.current.rotation.x += 0.01;
+  });
+
+  return (
+    <mesh ref={mesh}>
+      <sphereGeometry args={[1, 100, 100]} />
+      <meshStandardMaterial color={'red'} wireframe />
+    </mesh>
+  );
+};
+
 export default function App() {
   return (
     <Canvas>
@@ -64,12 +68,10 @@ export default function App() {
       <axesHelper args={[2]} />
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
-      <Box position={[-1.2, 0, 0]} />
-      <Box position={[1.2, 0, 0]} />
-      <mesh>
-        <sphereGeometry args={[1, 10]} />
-        <meshStandardMaterial color={'red'} wireframe />
-      </mesh>
+      <Rondavel />
+      {/* <Box position={[-1.2, 0, 0]} />
+      <Box position={[1.2, 0, 0]} /> */}
+      <Sphere />
     </Canvas>
   );
 }
